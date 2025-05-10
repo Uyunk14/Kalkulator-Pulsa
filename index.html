@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <header>
+    <img src="logo.png" alt="Sayunk Logo"/>
+    <h1>Kalkulator Pulsa by Sayunk</h1>
+  </header>
+  <meta charset="UTF-8">
+  <h2>Kalkulator Keuntungan Pulsa</h2>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+      width: 100%;
+    }
+    table, th, td {
+      border: 1px solid #aaa;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    input[type="number"] {
+      width: 80px;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <label>Masukan Total Harga Modal Pulsa yang laku (Rp): <input type="number" id="modal" value="928000"></label><br>
+  <label>Masukan Total Pulsa yang laku (dihitung dengan biaya adminnya): <input type="number" id="totalNominal" value="1010000"></label>
+
+  <h2>Penjualan Eceran</h2>
+  <table id="pulsaTable">
+    <tr>
+      <th>Nominal Pulsa</th>
+      <th>Harga Jual ke Pelanggan</th>
+      <th>Jumlah Transaksi</th>
+      <th>Total</th>
+      <th>Aksi</th>
+    </tr>
+    <tr>
+      <td><input type="number" value="10000" class="nominal"></td>
+      <td><input type="number" value="11000" class="hargaJual"></td>
+      <td><input type="number" value="50" class="jumlah"></td>
+      <td class="subtotal">-</td>
+      <td><button onclick="hapusBaris(this)">Hapus</button></td>
+    </tr>
+    <tr>
+      <td><input type="number" value="20000" class="nominal"></td>
+      <td><input type="number" value="21500" class="hargaJual"></td>
+      <td><input type="number" value="20" class="jumlah"></td>
+      <td class="subtotal">-</td>
+      <td><button onclick="hapusBaris(this)">Hapus</button></td>
+    </tr>
+    <tr>
+      <td><input type="number" value="50000" class="nominal"></td>
+      <td><input type="number" value="53000" class="hargaJual"></td>
+      <td><input type="number" value="10" class="jumlah"></td>
+      <td class="subtotal">-</td>
+      <td><button onclick="hapusBaris(this)">Hapus</button></td>
+    </tr>
+  </table>
+
+  <button onclick="tambahBaris()">+ Tambah Baris</button>
+  <button onclick="hitungKeuntungan()">Hitung Keuntungan</button>
+
+  <div class="result" id="hasil"></div>
+
+  <script>
+    function hitungKeuntungan() {
+      let modal = parseFloat(document.getElementById("modal").value);
+      let totalPenjualan = 0;
+      let table = document.getElementById("pulsaTable");
+      let rows = table.rows;
+
+      for (let i = 1; i < rows.length; i++) {
+        let hargaJual = parseFloat(rows[i].querySelector(".hargaJual").value) || 0;
+        let jumlah = parseInt(rows[i].querySelector(".jumlah").value) || 0;
+        let subtotal = hargaJual * jumlah;
+
+        rows[i].querySelector(".subtotal").textContent = "Rp" + subtotal.toLocaleString("id-ID");
+        totalPenjualan += subtotal;
+      }
+
+      let keuntungan = totalPenjualan - modal;
+      document.getElementById("hasil").innerHTML = `
+        Total Penjualan: Rp${totalPenjualan.toLocaleString("id-ID")}<br>
+        Modal: Rp${modal.toLocaleString("id-ID")}<br>
+        <span style="color: green">Keuntungan: Rp${keuntungan.toLocaleString("id-ID")}</span>
+      `;
+    }
+
+    function tambahBaris() {
+      let table = document.getElementById("pulsaTable");
+      let row = table.insertRow(-1);
+
+      row.innerHTML = `
+        <td><input type="number" class="nominal" placeholder="e.g. 10000"></td>
+        <td><input type="number" class="hargaJual" placeholder="e.g. 11000"></td>
+        <td><input type="number" class="jumlah" placeholder="e.g. 10"></td>
+        <td class="subtotal">-</td>
+        <td><button onclick="hapusBaris(this)">Hapus</button></td>
+      `;
+    }
+
+    function hapusBaris(button) {
+      let row = button.closest("tr");
+      row.remove();
+    }
+    function hitungHargaPerSeribu() {
+  let jumlahPulsa = parseFloat(document.getElementById("jumlahPulsaHarga").value) || 0;
+  let totalHarga = parseFloat(document.getElementById("totalHargaPembelian").value) || 0;
+
+  if (jumlahPulsa === 0) {
+    document.getElementById("hasilHargaPerSeribu").innerHTML = "Jumlah pulsa tidak boleh nol.";
+    return;
+  }
+
+  let hargaPerSeribu = (totalHarga / jumlahPulsa) * 1000;
+
+  document.getElementById("hasilHargaPerSeribu").innerHTML = 
+    `Harga per 1.000 pulsa: <span style="color: purple">Rp${hargaPerSeribu.toLocaleString("id-ID", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>`;
+}
+  </script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Kalkulator Pulsa by Sayunk</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #ffffff;
+        color: #222;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+      }
+      header {
+        margin-bottom: 30px;
+      }
+      img {
+        height: 80px;
+      }
+      input {
+        padding: 8px;
+        margin: 5px;
+        font-size: 1em;
+        width: 220px;
+        border: 1px solid #000000;
+        border-radius: 5px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        background-color: #5a8fe6;
+        border: none;
+        border-radius: 5px;
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      button:hover {
+        background-color: #3399ff;
+      }
+      .result {
+        margin-top: 20px;
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h2>Hitung Total Harga Modal Pulsa</h2>
+      <h3>(dihitung dengan biaya adminnya)</h3>
+      <label>Jumlah Pulsa yang laku (misal: 10000):<br><input type="number" id="jumlahPulsaDibeli" value="10000"></label><br>
+      <label>Harga per 1000 Pulsa (Rp):<br><input type="number" id="hargaPerSeribu" step="0.01" value="926.73"></label><br>
+      <button onclick="hitungTotalPembelian()">Hitung Total Pembayaran</button>
+      <div class="result" id="hasilPembelian"></div>
+    </section>
+  
+    <script>
+      function hitungTotalPembelian() {
+        let jumlah = parseFloat(document.getElementById("jumlahPulsaDibeli").value) || 0;
+        let hargaPerSeribu = parseFloat(document.getElementById("hargaPerSeribu").value) || 0;
+  
+        let total = (jumlah / 1000) * hargaPerSeribu;
+        document.getElementById("hasilPembelian").innerHTML = 
+          `Total yang harus dibayar: <span style="color: blue">Rp${total.toLocaleString("id-ID", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>`;
+      }
+    </script>
+    <section>
+      <h2>Hitung Harga per 1.000 Pulsa</h2>
+      <label>Total Pulsa (misal: 1010000):<br><input type="number" id="jumlahPulsaHarga"></label><br>
+      <label>Total Harga Pembelian (Rp):<br><input type="number" id="totalHargaPembelian"></label><br>
+      <button onclick="hitungHargaPerSeribu()">Hitung Harga per 1.000</button>
+      <div class="result" id="hasilHargaPerSeribu"></div>
+    </section>
+    
+  </body>
+</body>
+</html>
